@@ -1,0 +1,10 @@
+read
+read
+sub
+jump0 L1
+write "not equal"
+stop
+
+L1:
+write "equal"
+stop

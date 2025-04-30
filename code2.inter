@@ -1,0 +1,12 @@
+read
+push 2
+L1:
+sub
+jumpGreater0 L1
+jump0 L2
+write "odd"
+stop
+
+L2:
+write "even"
+stop
