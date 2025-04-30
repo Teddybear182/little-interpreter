@@ -153,7 +153,8 @@ class Interpreter:
                       print("you cant divide by zero bruh")
                       break
                   stack.push(b // a)
-              print(f"stack: {stack.buffer}")
+              #print(f"stack: {stack.buffer}") test
+
             except IndexError:
                   print("something went wrong with stack, check stack bro")
                   break
