@@ -38,6 +38,14 @@ class Tokenizer:
                 arg = int(parts[1])
                 self.program.append(arg)
                 self.current_token += 1
+            if opcode == 'store':
+                arg = int(parts[1])
+                self.program.append(arg)
+                self.current_token += 1
+            if opcode == 'load':
+                arg = int(parts[1])
+                self.program.append(arg)
+                self.current_token += 1    
             if opcode == 'write':
                 arg = ' '.join(parts[1:])[1:-1]
                 self.program.append(arg)
@@ -57,13 +65,14 @@ class Tokenizer:
 class Stack:
     def __init__(self, size=256):
         self.buffer = [0 for _ in range(size)]
-        self.sp = 0
+        self.sp = -1 #stack pointer
 
     def push(self, value):
         self.sp += 1
         self.buffer[self.sp] = value
     def pop(self):
         value = self.buffer[self.sp]
+        self.buffer[self.sp] = 0
         self.sp -= 1
         return value
     def top(self):
@@ -84,7 +93,7 @@ class Interpreter:
         stack = Stack(256)
         program = tokenizer.program
         labels = tokenizer.labels
-        pc = 0
+        pc = 0 #program counter
 
         while pc < len(program) and program[pc] != 'stop':
             try:
@@ -113,7 +122,18 @@ class Interpreter:
                       pc += 1
               elif opcode == 'read':
                   value = int(input("enter a number -> "))
-                  stack.push(value)        
+                  stack.push(value)  
+              elif opcode == 'store':
+                value = stack.pop()
+                address = int(program[pc])
+                stack.buffer[address] = value
+                pc += 1
+              elif opcode == 'load':
+                  address = int(program[pc])
+                  value = stack.buffer[address]
+                  stack.push(value)
+                  stack.buffer[address] = 0
+                  pc += 1
               elif opcode == 'add':
                   a = stack.pop()
                   b = stack.pop()
@@ -133,7 +153,7 @@ class Interpreter:
                       print("you cant divide by zero bruh")
                       break
                   stack.push(b // a)
-
+              print(f"stack: {stack.buffer}")
             except IndexError:
                   print("something went wrong with stack, check stack bro")
                   break

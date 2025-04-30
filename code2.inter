@@ -1,6 +1,6 @@
 read
-push 2
 L1:
+push 2
 sub
 jumpGreater0 L1
 jump0 L2
