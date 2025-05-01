@@ -100,8 +100,8 @@ class Interpreter:
                   stack.push(b // a)
 
               #### debugging printing ####
-              print(f"instruction: {opcode}")
-              print(f"stack: {stack.buffer}, variables stack: {variables_stack.buffer}")
+              #print(f"instruction: {opcode}")
+              #print(f"stack: {stack.buffer}, variables stack: {variables_stack.buffer}")
 
             except IndexError:
                   print("something went wrong with stack, check stack bro")

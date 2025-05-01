@@ -24,3 +24,11 @@ class Stack:
         return value
     def top(self):
         return self.buffer[self.sp]
+
+class Function:
+    def __init__(self, name, code):
+        self.name = name
+        self.code = code
+    def __repr__(self):
+        return f"{self.name}={self.code}"
+    
