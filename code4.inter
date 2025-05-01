@@ -1,6 +1,9 @@
-push 1
-var number
+var number = 54
+var number2 = 26
 push 2
 push 3
-v number
-v number
+pull number
+pull number2
+add
+sub
+mul

@@ -47,10 +47,18 @@ class Tokenizer:
                 self.program.append(arg)
                 self.current_token += 1    
             if opcode == 'var':
-                arg = parts[1]
-                self.program.append(arg)
-                self.current_token += 1
-            if opcode == 'v':
+                name = parts[1]
+                operand = parts[2]
+                if operand == '=':
+                    value = int(parts[3])
+                    self.program.append(name)
+                    self.program.append(operand)
+                    self.program.append(value)
+                    self.current_token += 3
+                else:
+                    print(f"invalid variable declaration: {line}")
+                    sys.exit(1)
+            if opcode == 'pull':
                 arg = parts[1]
                 self.program.append(arg)
                 self.current_token += 1
@@ -145,11 +153,18 @@ class Interpreter:
                   pc += 1
               elif opcode == 'var':
                   name = program[pc]
-                  pc += 1
-                  value = stack.pop()
+                  operand = program[pc + 1]
+                  if operand == '=':
+                      pc += 2
+                  value = program[pc]
                   variable = Variable(name, value)
+                  for i in variables_stack.buffer:
+                      if isinstance(i, Variable) and i.name == name:
+                          variables_stack.buffer.remove(i)
+                          variables_stack.sp -= 1
                   variables_stack.push(variable)
-              elif opcode == 'v':
+                  pc += 1
+              elif opcode == 'pull':
                   name = program[pc]
                   pc += 1
                   for i in variables_stack.buffer:
@@ -176,7 +191,9 @@ class Interpreter:
                       break
                   stack.push(b // a)
 
-              #print(f"stack: {stack.buffer}")
+              #### debugging printing ####
+              #print(f"instruction: {opcode}")
+              #print(f"stack: {stack.buffer}, variables stack: {variables_stack.buffer}")
 
             except IndexError:
                   print("something went wrong with stack, check stack bro")
@@ -187,11 +204,14 @@ class Interpreter:
             except ValueError:
                   print(f"invalid value: {program[pc]}")
                   break
+          
 
 class Variable:
     def __init__(self, name, value):
         self.name = name
         self.value = value
+    def __repr__(self):
+        return f"{self.name}={self.value}"
 
 
 if __name__ == "__main__":
