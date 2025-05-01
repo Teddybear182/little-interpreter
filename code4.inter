@@ -1,0 +1,6 @@
+push 1
+var number
+push 2
+push 3
+v number
+v number

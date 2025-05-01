@@ -4,6 +4,7 @@ store 3
 push 5
 load 3
 store 5
+store 4
 push 1
 push 2
 push 3

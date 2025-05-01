@@ -46,6 +46,14 @@ class Tokenizer:
                 arg = int(parts[1])
                 self.program.append(arg)
                 self.current_token += 1    
+            if opcode == 'var':
+                arg = parts[1]
+                self.program.append(arg)
+                self.current_token += 1
+            if opcode == 'v':
+                arg = parts[1]
+                self.program.append(arg)
+                self.current_token += 1
             if opcode == 'write':
                 arg = ' '.join(parts[1:])[1:-1]
                 self.program.append(arg)
@@ -91,6 +99,7 @@ class Interpreter:
 
         tokenizer = Tokenizer(self.path)
         stack = Stack(256)
+        variables_stack = Stack(256)
         program = tokenizer.program
         labels = tokenizer.labels
         pc = 0 #program counter
@@ -134,6 +143,19 @@ class Interpreter:
                   stack.push(value)
                   stack.buffer[address] = 0
                   pc += 1
+              elif opcode == 'var':
+                  name = program[pc]
+                  pc += 1
+                  value = stack.pop()
+                  variable = Variable(name, value)
+                  variables_stack.push(variable)
+              elif opcode == 'v':
+                  name = program[pc]
+                  pc += 1
+                  for i in variables_stack.buffer:
+                      if isinstance(i, Variable) and i.name == name:
+                          stack.push(i.value)
+                          break
               elif opcode == 'add':
                   a = stack.pop()
                   b = stack.pop()
@@ -153,7 +175,7 @@ class Interpreter:
                       print("you cant divide by zero bruh")
                       break
                   stack.push(b // a)
-              #print(f"stack: {stack.buffer}") test
+              print(f"stack: {stack.buffer}")
 
             except IndexError:
                   print("something went wrong with stack, check stack bro")
@@ -164,6 +186,11 @@ class Interpreter:
             except ValueError:
                   print(f"invalid value: {program[pc]}")
                   break
+
+class Variable:
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
 
 
 if __name__ == "__main__":
