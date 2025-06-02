@@ -12,14 +12,14 @@ class REPLInterpreter():
                     break
                 if line == '':
                     continue
-                with open("temp_code.txt", "a") as file:
+                with open("temp_code.tmp", "a") as file:
                     file.write(line + "\n")
             except Exception as e:
                 print(f"An error occurred: {e}")
                 continue
           
-        interpreter = Interpreter("temp_code.txt")
+        interpreter = Interpreter("temp_code.tmp")
         interpreter.run()
-        os.remove("temp_code.txt")
+        os.remove("temp_code.tmp")
 
         
