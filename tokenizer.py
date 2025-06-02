@@ -13,6 +13,7 @@ class Tokenizer:
         
         self.program = []
         self.labels = {}
+        self.functions = {}
         self.current_token = 0
         
         self.tokenize()
@@ -74,5 +75,16 @@ class Tokenizer:
                 arg = parts[1]
                 self.program.append(arg)
                 self.current_token += 1
+            if opcode == 'function':
+                name = parts[1][:-1]
+                self.program.append(name)
+                self.functions[name] = self.current_token
+            if opcode == 'call':
+                arg = parts[1]
+                self.program.append(arg)
+                if arg in self.functions:
+                  self.current_token += 1
+                else:
+                    print(f"Unidentified function name: {arg}")
 
         print(str(self.program) + "\n")
